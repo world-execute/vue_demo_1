@@ -9,4 +9,11 @@
 > * Vue-router
 > * Element-UI
 > * Axios
-> * Echart
+> * Echarts
+---
+>后端项目技术栈
+> * Node.js
+> * Express
+> * Jwt
+> * MongoDB
+> * Mongoose
