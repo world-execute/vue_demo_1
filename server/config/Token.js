@@ -9,6 +9,7 @@ module.exports = token = {
     credentialsRequired: false,
     // unless路径
     path:[
-        /^\/login\//
+        '/api/private/users/login',
+        '/api/private/users'
     ]
 }
