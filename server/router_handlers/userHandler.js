@@ -28,9 +28,9 @@ module.exports.login = ({body},res)=>{
                     msg:'登陆成功'
                 })
             })
-        }else res.status(403).json({msg:'密码错误'})
+        }else res.status(202).json({msg:'密码错误'})
     }).catch(reason => {
-        res.status(403).json({msg:'用户名不存在'})
+        res.status(202).json({msg:'用户名不存在'})
     })
 }
 module.exports.addUsers = ({body},res)=>{

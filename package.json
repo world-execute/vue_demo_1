@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "start server": "nodemon ./server/main.js"
+    "start node server": "nodemon ./server/main.js"
   },
   "dependencies": {
     "@escook/express-joi": "^1.1.1",
+    "axios": "^1.1.3",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
     "element-ui": "^2.15.12",
@@ -19,6 +20,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.5",
     "node-sass": "^4.14.1",
+    "nprogress": "^0.2.0",
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
     "vue": "^2.6.14",

@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import {userLogin} from '@/api/userApi'
 export default {
   name: "Login",
   data() {
@@ -60,9 +61,30 @@ export default {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          // TODO 实现登录
+          userLogin({
+            username:this.form.username,
+            password:this.form.password
+          }).then(value => {
+            if(value.status === 200){
+              this.$message({
+                message:'登陆成功',
+                type:'success'
+              })
+            }else {
+              this.$message({
+                message:value.data.msg,
+                type:'error'
+              })
+            }
+          }).catch(reason => {
+            console.log(reason.data)
+          })
         } else {
-          console.log('error submit!!');
+          this.$message({
+            message:'提交信息有误',
+            type:'error'
+          })
           return false;
         }
       });
