@@ -1,28 +1,13 @@
 <template>
   <div id="app">
-    <router-view/>
+    <!--路由占位符\路由出口-->
+    <router-view></router-view>
   </div>
 </template>
 
+<script>
+export default {
+  name:'App'
+}
+</script>
 
-<style>
-*{
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  outline: none;
-  text-decoration: none;
-}
-.flex{
-  display: flex;
-}
-.j-c{
-  justify-content: center;
-}
-.j-s{
-  justify-content: space-between;
-}
-.a-c{
-  align-items: center;
-}
-</style>

@@ -5,7 +5,7 @@ import { Loading } from 'element-ui';
 // 初始化axios对象实例
 const instance = axios.create({
     // 接口地址根路径
-    baseURL: 'http://localhost:5000/api/private/users/',
+    baseURL: 'http://127.0.0.1:8888/api/private/v1/',
     // 请求超时时间
     timeout: 1000
 });
@@ -50,10 +50,12 @@ instance.interceptors.response.use(function (response) {
 
 // GTE请求方法
 let get = (url,params) => {
-    instance.get(url,{params}).then(({data}) => {
-        return data
-    }).catch(reason => {
-        return reason
+    return new Promise((resolve, reject) => {
+        instance.get(url,{params}).then(res=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        })
     })
 }
 
@@ -67,6 +69,7 @@ let post = (url,params) => {
         })
     })
 }
+
 // 导出get和post方法
 export {
     get,

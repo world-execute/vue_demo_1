@@ -1,31 +1,31 @@
 <template>
-  <div class="main">
-    <div class="login">
-      <el-form
-          size="mini"
-          :hide-required-asterisk="true"
-          :model="form"
-          status-icon
-          :rules="rules"
-          ref="form"
-          class="demo-ruleForm">
-        <el-form-item size="100" label-width="60px" label="用户名" prop="username">
-          <el-input v-model="form.username" autocomplete="off"></el-input>
+  <div class="login_container">
+    <div class="login_box">
+      <!--头像区-->
+      <div class="avatar_box">
+        <img src="../assets/logo.png" alt="头像">
+      </div>
+      <!--表单区-->
+      <el-form ref="form" :model="loginForm" :rules="rules" class="login_form">
+        <el-form-item prop="username">
+          <el-input
+              prefix-icon="iconfont icon-yonghutianchong"
+              v-model="loginForm.username"
+              placeholder="请输入用户名">
+          </el-input>
         </el-form-item>
-
-        <el-form-item size="100" label-width="60px" label="密码" prop="password">
-          <el-input type="password" v-model="form.password" autocomplete="off"></el-input>
+        <el-form-item prop="password">
+          <el-input
+              prefix-icon="iconfont icon-tianchongxing-"
+              v-model="loginForm.password"
+              placeholder="请输入密码"
+              type="password">
+          </el-input>
         </el-form-item>
-
-        <el-form-item>
-          <el-row style="width: 100%" justify="space-between">
-            <el-col :span="12">
-              <el-button type="primary" @click="submitForm('form')">登录</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button @click="resetForm('form')">重置</el-button>
-            </el-col>
-          </el-row>
+        <!--按钮区-->
+        <el-form-item class="btns">
+          <el-button type="primary" @click="submitForm('form')">登录</el-button>
+          <el-button type="info" @click="resetForm('form')">取消</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       // 表单数据
-      form: {
+      loginForm: {
         // 登录名
         username:'',
         // 密码
@@ -48,44 +48,31 @@ export default {
       // 数据验证
       rules:{
         username:[
-          {required:true,message:'请输入用户名',trigger:'blur'}
+          {required:true,message:'请输入用户名',trigger:'blur'},
+          {min:3,max:10,message: '用户名长度应该在3到10个字符',trigger:'blur'}
         ],
         password:[
           {required:true,message:'请输入密码',trigger:'blur'},
-          {min:5,max:10,message: '密码长度应该在5到10个字符',trigger:'blur'}
+          {min:6,max:10,message: '密码长度应该在6到10个字符',trigger:'blur'}
         ]
       }
     }
   },
   methods:{
     submitForm(form) {
-      this.$refs[form].validate((valid) => {
-        if (valid) {
-          // TODO 实现登录
-          userLogin({
-            username:this.form.username,
-            password:this.form.password
-          }).then(value => {
-            if(value.status === 200){
-              this.$message({
-                message:'登陆成功',
-                type:'success'
-              })
-            }else {
-              this.$message({
-                message:value.data.msg,
-                type:'error'
-              })
-            }
-          }).catch(reason => {
-            console.log(reason.data)
-          })
-        } else {
-          this.$message({
-            message:'提交信息有误',
-            type:'error'
-          })
-          return false;
+      this.$refs[form].validate(async (valid) => {
+        if(!valid) return
+        const {data:res} = await userLogin(this.loginForm)
+        // console.log(res)
+        if(res.meta.status !== 200){
+          this.$message.error({message:res.meta.msg})
+        }else {
+          // 登录成功
+          this.$message.success({message:res.meta.msg})
+          // 保存token
+          window.sessionStorage.setItem('token',res.data.token)
+          // 编程式导航到后台主页
+          this.$router.push('/home')
         }
       });
     },
@@ -96,17 +83,48 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.main{
-  display: flex;
-  height: 100vh;
-  justify-content: center;
-  align-items: center;
-  .login{
-    width: 300px;
-    height: 160px;
-    padding: 20px;
-    border: 1px solid;
+<style lang="less" scoped>
+.login_container{
+  height: 100%;
+  background-color: #2b4b6b;
+}
+.login_box{
+  width: 450px;
+  height: 300px;
+  background-color: white;
+  border-radius: 5px;
+  position: absolute;
+  left: calc(50% - 225px);
+  top: calc(50% - 150px);
+  .avatar_box{
+    position: absolute;
+    left: calc(50% - 50px);
+    top: -50px;
+    height: 100px;
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    box-shadow: 0 0  10px #afafaf;
+    backdrop-filter: blur(10px);
+    img{
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: #eff;
+    }
   }
+}
+.login_form{
+  width: 100%;
+  position: absolute;
+  bottom: 10px;
+  padding: 0 50px;
+  //box-sizing 定义如何计算元素的宽度和高度:是否应该包含填充和边框
+  box-sizing: border-box;
+}
+.btns{
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

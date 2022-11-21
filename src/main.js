@@ -6,20 +6,10 @@ import router from './router'
 import store from './store'
 // 导入插件
 import './plugin'
-// 注册Nprogress 跳转进度条
-import Nprogress from 'nprogress'
-import 'nprogress/nprogress.css'
+// 导入全局样式
+import './assets/css/global.css'
 
 Vue.config.productionTip = false
-
-// 全局路由守卫
-router.beforeEach((to, from, next) => {
-  Nprogress.start()
-  next()
-})
-router.afterEach(() => {
-  Nprogress.done()
-})
 
 new Vue({
   router,
