@@ -28,6 +28,8 @@ const endLoading = () => {
 instance.interceptors.request.use(function (config) {
     // 加载请求动画
     startLoading()
+    // 为请求头对象,添加 Token 验证的Authorization 字段
+    config.headers.Authorization = window.sessionStorage.getItem('token')
     return config;
 }, function (error) {
     // 对请求错误做些什么
@@ -50,6 +52,7 @@ instance.interceptors.response.use(function (response) {
 
 // GTE请求方法
 let get = (url,params) => {
+    // console.log(params)
     return new Promise((resolve, reject) => {
         instance.get(url,{params}).then(res=>{
             resolve(res)
@@ -70,9 +73,21 @@ let post = (url,params) => {
     })
 }
 
+// PUT请求方法
+let put = (url,params) => {
+    return new Promise((resolve, reject) => {
+        instance.put(url,params).then(res=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        })
+    })
+}
+
 // 导出get和post方法
 export {
     get,
-    post
+    post,
+    put
 }
 

@@ -20,7 +20,18 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import('../views/Home')
+    redirect: '/welcome',
+    component: () => import('../views/Home'),
+    children:[
+      {
+        path:'/welcome',
+        component: () => import('../components/Welcome')
+      },
+      {
+        path:'/users',
+        component: () => import('../views/user/Users')
+      }
+    ]
   },
   {
     path: '*',
@@ -36,11 +47,17 @@ const router = new VueRouter({
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
   Nprogress.start()
-  if(to.path === '/login') return next()
   // 获取token
   const tokenStr = window.sessionStorage.getItem('token')
-  if(!tokenStr) return next('/login')
-  next()
+  // token不存在则跳转到登录页
+  // token存在就不需要进入登录页,直接跳转到首页
+  if(to.path ==='/login'){
+    return tokenStr ? next('/home') : next()
+  }else {
+    // 访问其他路由时判断token是否存在
+    // 存在则放行,不存在则跳转到登录页面
+    return tokenStr ? next() : next('/login')
+  }
 })
 router.afterEach(() => {
   Nprogress.done()

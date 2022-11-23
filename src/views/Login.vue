@@ -62,13 +62,15 @@ export default {
     submitForm(form) {
       this.$refs[form].validate(async (valid) => {
         if(!valid) return
-        const {data:res} = await userLogin(this.loginForm)
+        const {data:res} = await userLogin(this.loginForm).catch(reason => {
+          this.$message.error('请求失败,请稍后再试')
+        })
         // console.log(res)
         if(res.meta.status !== 200){
-          this.$message.error({message:res.meta.msg})
+          this.$message.error(res.meta.msg)
         }else {
           // 登录成功
-          this.$message.success({message:res.meta.msg})
+          this.$message.success(res.meta.msg)
           // 保存token
           window.sessionStorage.setItem('token',res.data.token)
           // 编程式导航到后台主页
