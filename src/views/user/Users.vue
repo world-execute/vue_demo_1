@@ -42,7 +42,7 @@
             <!--修改按钮-->
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
             <!--删除按钮-->
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
             <!--分配角色按钮-->
             <el-tooltip class="item" effect="dark" content="分配角色"
                         placement="top" :enterable="false"
@@ -125,7 +125,7 @@
 
 <script>
 import {get_userList,changeUserState,addUser,
-  get_userById,editUser
+  get_userById,editUser,deleteUser
 } from "@/api/userApi";
 
 export default {
@@ -260,6 +260,26 @@ export default {
         this.editDialogVisible = false
         await this.getUserList()
       })
+    },
+    // 根据id删除用户
+    async removeUserById(id){
+      // 弹框询问是否删除
+      const confirmRes = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(reason => reason )
+      // 用户点击确定,res的值为confirm
+      // 用户点击取消,res的值为cancel
+      if(confirmRes !== 'confirm'){
+        return this.$message.info('已取消删除')
+      }
+      const {data:res} = await deleteUser(id)
+      if(res.meta.status !== 200){
+        return this.$message.error('删除用户信息失败')
+      }
+      this.$message.success('删除用户信息成功')
+      await this.getUserList()
     }
   }
 }

@@ -84,10 +84,22 @@ let put = (url,params) => {
     })
 }
 
+// DELETE请求方法
+let _delete = (url,params) => {
+    return new Promise((resolve, reject) => {
+        instance.delete(url,params).then(res=>{
+            resolve(res)
+        }).catch(err=>{
+            reject(err)
+        })
+    })
+}
+
 // 导出get和post方法
 export {
     get,
     post,
-    put
+    put,
+    _delete
 }
 
