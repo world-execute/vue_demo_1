@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
       <el-breadcrumb-item>活动详情</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card>
@@ -47,7 +47,7 @@
             <el-tooltip class="item" effect="dark" content="分配角色"
                         placement="top" :enterable="false"
             >
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="setRole(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -62,71 +62,100 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total">
       </el-pagination>
-      <!--添加用户的dialog-->
-      <el-dialog
-          title="添加用户"
-          width="30%"
-          :visible.sync="addDialogVisible"
-          @close="addDialogClosed"
+    </el-card>
+    <!--添加用户的dialog-->
+    <el-dialog
+        title="添加用户"
+        width="30%"
+        :visible.sync="addDialogVisible"
+        @close="addDialogClosed"
+    >
+      <!--内容主体区-->
+      <el-form :model="addForm" :rules="addFormRules"
+               ref="addForm" label-width="70px"
       >
-        <!--内容主体区-->
-        <el-form :model="addForm" :rules="addFormRules"
-                 ref="addForm" label-width="70px"
-        >
-          <el-form-item label="用户名" prop="username" >
-            <el-input v-model="addForm.username" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="addForm.password" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="addForm.email" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="手机号" prop="mobile">
-            <el-input v-model="addForm.mobile" clearable></el-input>
-          </el-form-item>
-        </el-form>
-        <!--底部区域-->
-        <span slot="footer" class="dialog-footer">
+        <el-form-item label="用户名" prop="username" >
+          <el-input v-model="addForm.username" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="addForm.mobile" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <!--底部区域-->
+      <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUser">确 定</el-button>
         </span>
-      </el-dialog>
-      <!--修改用户的dialog-->
-      <el-dialog
-          title="修改用户"
-          width="30%"
-          :visible.sync="editDialogVisible"
-          @close="editDialogClosed"
+    </el-dialog>
+    <!--修改用户的dialog-->
+    <el-dialog
+        title="修改用户"
+        width="30%"
+        :visible.sync="editDialogVisible"
+        @close="editDialogClosed"
+    >
+      <!--内容主体区-->
+      <el-form :model="editForm" :rules="addFormRules"
+               ref="editForm" label-width="70px"
       >
-        <!--内容主体区-->
-        <el-form :model="editForm" :rules="addFormRules"
-                 ref="editForm" label-width="70px"
-        >
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="editForm.username" clearable disabled></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
-            <el-input v-model="editForm.email" clearable></el-input>
-          </el-form-item>
-          <el-form-item label="手机号" prop="mobile">
-            <el-input v-model="editForm.mobile" clearable></el-input>
-          </el-form-item>
-        </el-form>
-        <!--底部区域-->
-        <span slot="footer" class="dialog-footer">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editForm.username" clearable disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editForm.email" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="editForm.mobile" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <!--底部区域-->
+      <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
         </span>
-      </el-dialog>
-    </el-card>
+    </el-dialog>
+    <!--分配用户角色的对话框-->
+    <el-dialog
+        title="分配权限"
+        :visible.sync="setRoleDialogVisible"
+        width="30%"
+        @close="setRoleDialogClosed"
+       >
+      <!--内容主体-->
+      <div class="selected_div">
+        <p>当前的用户:<span>{{userinfo.username}}</span></p>
+        <p>当前的角色:<span>{{userinfo.role_name}}</span></p>
+        <p>分配新角色
+          <el-select v-model="selectedRoleID" placeholder="请选择">
+            <el-option
+                v-for="item in rolesList"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <!--尾部-->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {get_userList,changeUserState,addUser,
-  get_userById,editUser,deleteUser
+  get_userById,editUser,deleteUser,setRoleByUserId
 } from "@/api/userApi";
+import {get_rolesList} from "@/api/powerApi";
 
 export default {
   name: "Users",
@@ -136,16 +165,24 @@ export default {
         query:'',
         // 当前页数
         pagenum:1,
-        pagesize:1
+        pagesize:5
       },
       // 用户列表
       userlist:[],
       // 用户列表总数
       total:0,
+      // 要被分配角色的用户信息
+      userinfo:{},
+      // 所有角色列表
+      rolesList:[],
+      // 选中已选中的角色id
+      selectedRoleID:'',
       // 控制添加用户对话框的显示和隐藏
       addDialogVisible: false,
       // 控制修改用户对话框的显示和隐藏
       editDialogVisible: false,
+      // 控制分配用户角色对话框的显示和隐藏
+      setRoleDialogVisible: false,
       // 添加用户的表单数据
       addForm:{
         username:'',
@@ -264,7 +301,7 @@ export default {
     // 根据id删除用户
     async removeUserById(id){
       // 弹框询问是否删除
-      const confirmRes = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      const confirmRes = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -280,11 +317,50 @@ export default {
       }
       this.$message.success('删除用户信息成功')
       await this.getUserList()
+    },
+    //展示分配角色的对话框
+    async setRole(userInfo){
+      this.setRoleDialogVisible = true
+      this.userinfo = userInfo
+      // 在展示对话框之前,获取所有的角色列表
+      // TODO 获取角色列表
+      const {data:res} =  await get_rolesList()
+      if(res.meta.status !== 200){
+        return this.$message.error('获取角色列表失败')
+      }
+      this.rolesList = res.data
+    },
+    // 点击按钮分配角色
+    async saveRoleInfo(){
+      if(!this.selectedRoleID){
+        return this.$message.error('请选择要分配的角色!')
+      }
+      const {data:res} = await setRoleByUserId(this.userinfo.id,{rid:this.selectedRoleID})
+      if (res.meta.status !== 200){
+        return this.$message.error('分配角色失败')
+      }
+      this.$message.success('分配角色成功')
+      await this.getUserList()
+      this.setRoleDialogVisible = false
+    },
+    // 关闭分配角色对话框时重置用户的选择
+    setRoleDialogClosed(){
+      this.selectedRoleID =''
+      this.userinfo = {}
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-
+.selected_div{
+  p{
+    margin-bottom: 15px;
+    span{
+      margin-left: 10px;
+      color: #409eff;
+      font-weight: bolder;
+    }
+  }
+}
 </style>

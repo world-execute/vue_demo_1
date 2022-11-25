@@ -2,6 +2,9 @@ html,body,#app{
     height: 100vh;
 
 }
+#app{
+    min-width: 1000px;
+}
 *{
     padding: 0;
     margin: 0;

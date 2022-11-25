@@ -13,3 +13,5 @@ export const get_userById = id => get(`users/${id}`)
 export const editUser = (id,params) => put(`users/${id}`,params)
 // 根据id删除用户信息
 export const deleteUser = id => _delete(`users/${id}`)
+// 根据id分配用户角色
+export const setRoleByUserId = (id,roleId) => put(`users/${id}/role`,roleId)
