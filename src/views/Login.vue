@@ -60,22 +60,23 @@ export default {
   },
   methods:{
     submitForm(form) {
-      this.$refs[form].validate(async (valid) => {
+      this.$refs[form].validate(valid => {
         if(!valid) return
-        const {data:res} = await userLogin(this.loginForm).catch(reason => {
+        userLogin(this.loginForm).then(({data:res}) =>{
+          // console.log(res)
+          if(res.meta.status !== 200){
+            this.$message.error(res.meta.msg)
+          }else {
+            // 登录成功
+            this.$message.success(res.meta.msg)
+            // 保存token
+            window.sessionStorage.setItem('token',res.data.token)
+            // 编程式导航到后台主页
+            this.$router.push('/home')
+          }
+        }).catch(reason => {
           this.$message.error('请求失败,请稍后再试')
         })
-        // console.log(res)
-        if(res.meta.status !== 200){
-          this.$message.error(res.meta.msg)
-        }else {
-          // 登录成功
-          this.$message.success(res.meta.msg)
-          // 保存token
-          window.sessionStorage.setItem('token',res.data.token)
-          // 编程式导航到后台主页
-          this.$router.push('/home')
-        }
       });
     },
     resetForm(form) {

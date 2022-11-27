@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 
-
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,6 +37,10 @@ const routes = [
       {
         path: '/roles',
         component:() => import('../views/power/Roles')
+      },
+      {
+        path: '/categories',
+        component:() => import('../views/goods/Cate')
       }
     ]
   },
