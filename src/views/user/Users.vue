@@ -9,7 +9,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <!--搜索与添加区-->
-          <el-input v-model="queryInfo.query" placeholder="请输入内容" clearable @clear="getUserList">
+          <el-input v-model="queryInfo.query" placeholder="根据姓名查找" clearable @clear="getUserList">
             <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
