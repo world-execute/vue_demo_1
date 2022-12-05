@@ -18,6 +18,7 @@
           <el-input
               prefix-icon="iconfont icon-tianchongxing-"
               v-model="loginForm.password"
+              show-password
               placeholder="请输入密码"
               type="password">
           </el-input>
@@ -125,6 +126,9 @@ export default {
   padding: 0 50px;
   //box-sizing 定义如何计算元素的宽度和高度:是否应该包含填充和边框
   box-sizing: border-box;
+  /deep/ .el-form-item .el-input__inner{
+    letter-spacing: 1px;
+  }
 }
 .btns{
   display: flex;

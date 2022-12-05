@@ -52,7 +52,6 @@ instance.interceptors.response.use(function (response) {
 
 // GTE请求方法
 let get = (url,params) => {
-    // console.log(params)
     return new Promise((resolve, reject) => {
         instance.get(url,{params}).then(res=>{
             resolve(res)
