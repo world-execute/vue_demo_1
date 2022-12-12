@@ -28,23 +28,31 @@ const routes = [
       },
       {
         path:'/users',
-        component: () => import('../views/user/Users')
+        component: () => import('User/Users')
       },
       {
         path:'/rights',
-        component:() => import('../views/power/Rights')
+        component:() => import('Power/Rights')
       },
       {
         path: '/roles',
-        component:() => import('../views/power/Roles')
+        component:() => import('Power/Roles')
       },
       {
         path: '/categories',
-        component:() => import('../views/goods/Cate')
+        component:() => import('Goods/Cate')
       },
       {
         path: '/params',
-        component:() => import('../views/goods/Params')
+        component:() => import('Goods/Params')
+      },
+      {
+        path: '/goods',
+        component:() => import('Goods/Goods')
+      },
+      {
+        path: '/add_goods',
+        component:() => import('Goods/AddShop')
       }
     ]
   },

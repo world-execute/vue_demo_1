@@ -17,3 +17,10 @@ export const addCateAttributesById = (cat_id,params) => post(`categories/${cat_i
 export const editCateAttributesById = (cat_id,attr_id,params) => put(`categories/${cat_id}/attributes/${attr_id}`,params)
 // 根据分类id和参数id删除动态或静态参数
 export const deleteCateAttributesById = (cat_id,attr_id) => _delete(`categories/${cat_id}/attributes/${attr_id}`)
+
+// 获取商品列表数据
+export const getGoodsList = params => get('goods',params)
+// 根据商品id删除商品
+export const removeShopById = shop_id => _delete(`goods/${shop_id}`)
+// 新增商品
+export const addShop = params => post('goods',params)
