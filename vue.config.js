@@ -14,8 +14,9 @@ module.exports = defineConfig({
     resolve:{
       // 路径别名
       alias:{
-        "@v":path.resolve(__dirname,'src/views'),
-        "@c":path.resolve(__dirname,'src/components')
+        "User":path.resolve(__dirname,'src/views/user'),
+        "Power":path.resolve(__dirname,'src/views/power'),
+        "Goods":path.resolve(__dirname,'src/views/goods')
       }
     }
   }
